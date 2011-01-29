@@ -1,0 +1,31 @@
+{
+  "name": "__MSG_app_name__",
+  "description": "__MSG_app_desc__",
+  "background_page": "background.html",
+  "version": "2.0.3",
+  "default_locale": "pl",
+  "icons": {
+      "128": "images/icon_128.png",
+      "48": "images/icon_48.png",
+      "32": "images/icon_32.png",
+      "16": "images/icon_16.png"
+   },
+  "minimum_chrome_version": "6.0.0",
+  "options_page": "options.html",
+  "browser_action": {
+    "default_title": "__MSG_app_name__",
+    "default_icon": "images/icon_32.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs",
+    "https://era-sms.appspot.com/*",
+    "http://googleads.*/*",
+    "http://*.doubleclick.net/*",
+    "http://www.google.com/m8/feeds/*",
+    "https://www.google.com/accounts/OAuthGetRequestToken",
+    "https://www.google.com/accounts/OAuthAuthorizeToken",
+    "https://www.google.com/accounts/OAuthGetAccessToken",
+    "notifications"
+  ]
+}

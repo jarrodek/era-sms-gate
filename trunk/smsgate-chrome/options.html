@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Options</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="css/app.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="js/consts.js"></script>
+        <script type="text/javascript" src="js/options.js"></script>
+        <script type="text/javascript" src="js/helper.js"></script>
+        <script type="text/javascript" src="js/view_helper.js"></script>
+        <script src="js/sprintf.js" type="text/javascript"></script>
+        <script type="text/javascript" src="js/analytics.js"></script>
+    </head>
+    <body onload="loadOptions()">
+    <nav class="main-menu"></nav>
+    <div class="logo">
+        <img src="images/icon_128.png" alt="Logo"/>
+    </div>
+    <fieldset class="main-options">
+        <legend><script type="text/javascript">document.write(chrome.i18n.getMessage('options_page_title'));</script></legend>
+        <h3>Logowanie do bramki</h3>
+        <div class="form_row">
+            <div class="form_property form_required">Numer telefonu</div>
+            <input placeholder="48602602602" type="text" id="login" value="" maxlength="11" size="14" name="login"/><br/>
+            <span class="add-info">np: 48602602602</span>
+            <div class="clearer">&nbsp;</div>
+            
+        </div>
+        <div class="form_row">
+            <div class="form_property form_required">Ustaw hasło</div>
+            <input placeholder="Hasło bramki" type="password" id="passwd" value="" maxlength="100" size="14" name="passwd"/>
+            <input type="checkbox" onchange="showPass(this.checked)" id="showPass"/><label for="showPass">Pokaż hasło</label>
+            <div class="clearer">&nbsp;</div>
+        </div>
+        <div class="hint-info" title="Po co mój numer telefonu?">
+            Bramka Ery wykorzystuje Twój numer telefonu do zalogowania się w bramce.
+            Jaki to będzie numer ustalasz przy zakładaniu swojego <a target="_blank" href="http://www.era.pl/pl/indywidualni/rozrywka/komunikacja/bramki_sms">konta</a>.
+        </div>
+        <div class="hint-info" title="Dlaczego pole &quot;hasło&quot; jest puste?">
+            Twoje hasło do bramki nie jest przechowywane na tym komputerze.
+            Zamiast tego wysyłane jest na serwer aplikacji i dopiero tam podpisywane hasłem jest zapytanie do serwera Ery.
+            Dzięki temu twoje dane są bezpieczne i nikt nie wykorzysta Twojego konta.
+        </div>
+        <div class="form_row">
+            <div class="form_property form_required">Typ bramki</div>
+            <select id="gateInnerType">
+                <option value="multimedia">Multimedialna</option>
+                <option value="sponsored">Sponsorowana</option>
+            </select>
+
+            <div class="clearer">&nbsp;</div>
+        </div>
+        <p class="account-info">
+            Jeśli nie posiadasz konta bramki ERA możesz je założyć pod adresem:
+            <a target="_blank" href="http://www.era.pl/pl/indywidualni/rozrywka/komunikacja/bramki_sms">
+                www.era.pl
+            </a>
+        </p>
+        <h3>Pozostałe opcje</h3>
+
+        <div class="form_row">
+            <div class="form_property form_required">Historia wiadomości</div>
+            <input type="checkbox" id="save-history" name="save-history"/>
+            <label style="font-size: small;" for="save-history">Wysyłane wiadomości będą zapisywane</label>
+            <a class="contact-edit" id="hitory-lnk" href="#" onclick="chrome.tabs.create({url:'history.html'});return false;">Pokaż historię</a>
+            <div class="last-sync-time">
+                <span class="lang-inner" label="last_synch_time">Ostatnia synchronizacja: </span>
+                <span id="last-synch"></span>
+            </div>
+
+            <div class="clearer">&nbsp;</div>
+        </div>
+
+        <div class="form_row" id="sync-gmail-field" style="display: none;">
+            <div class="form_property form_required">Synchronizuj kontakty z Gmail &trade;</div>
+            <input type="checkbox" id="synch-gmail" name="synch-gmail"/>
+            <label style="font-size: small;" for="synch-gmail">Kontakty będą pobierane co jakiś czas</label>
+            <a class="contact-edit" id="contacts-lnk" href="#" onclick="chrome.tabs.create({url:'contacts.html'});return false;">Pokaż kontakty</a>
+            <div class="clearer">&nbsp;</div>
+        </div>
+        <div class="form_row" id="sync-gmail-field-info" style="display: none;">
+            <p>
+                Synchronizacja kontaktów Gmail &trade; jest aktualnie wyłączona.<br/>
+                <a class="contact-edit" id="contacts-enable-lnk" href="#" onclick="chrome.tabs.create({url:'enable_gmail_contacts.html'});return false;">Uruchom synchronizację.</a>
+            </p>
+        </div>
+
+        <div class="form_row form_row_submit">
+            <div class="form_value">
+                <input onclick="saveSettings()" type="submit" class="button blue" value="Zapisz"/>
+            </div>
+            <div class="clearer">&nbsp;</div>
+        </div>
+        <div class="hint-info" title="Co się dzieje z moimi danymi po zapisaniu?">
+            Część tych danych zapisywana jest lokalnie na tym komputerze. Są to login bramki, czy synchronizować kontakty Gmai&trade; oraz czy zapisywać historię wiadomości.
+            Natomiast część wysyłana jest do serwera aplikaji aby tam były przechowywane ze względów bezpieczeństwa (np. Twoje hasło, które na tym komputerze bez problemu można odczywać) oraz dane synchronizowane pomiędzy różnymi Twoimi przeglądarkami (login, historia).<br/>
+            <input type="checkbox" id="turn-off-synch" value="1" />
+            <label for="turn-off-synch">
+                Wyłącz synchronizację ustawień w tej przeglądarce (nie dotyczy loginu i hasła).
+            </label>
+        </div>
+        <p id="log"></p>
+        <span id="loader" class="options-loader">
+<!--            <img src="images/loader-wide.gif" alt=" "/>-->
+            <progress></progress>
+        </span>
+    </fieldset>
+</body>
+</html>

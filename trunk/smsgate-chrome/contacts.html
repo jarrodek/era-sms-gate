@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Contacts</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="css/app.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="js/consts.js"></script>
+        <script type="text/javascript" src="js/helper.js"></script>
+        <script type="text/javascript" src="js/send_processor.js"></script>
+        <script type="text/javascript" src="js/contacts.js"></script>
+        <script type="text/javascript" src="js/history_helper.js"></script>
+        <script type="text/javascript" src="js/analytics.js"></script>
+    </head>
+    <body onload="loadContacts()">
+
+
+        <nav class="main-menu"></nav>
+        <h2>Kontakty</h2>
+        <p style="float:right;">
+            <a href="#" id="google-sync">
+                Pobierz kontakty Gmail
+                <img src="images/gmail_logo.png" alt="Gmail" style="vertical-align: middle;width:30px;"/>
+            </a><br/>
+        </p>
+        
+        <div id="controls" style="margin-bottom: 15px;">
+            <input class="search-contact" type="search" autofocus="true" value="" id="search-q" size="60" placeholder="szukaj kontaktu..."/>
+            <p>
+                <a href="#" id="add-contact-lnk">Utwórz nowy kontakt</a>
+            </p>
+        </div>
+        <div class="contacts-loader">
+            <progress>working...</progress>
+            <span class="progres-info">ładowanie kontaktów...</span>
+        </div>
+
+        <table cellpadding="0" cellspacing="0" style="width:100%;">
+            <tr>
+                <td valign="top" style="vertical-align: top;">
+                    <div class="contacts-table"></div>
+                    <span id="table-log"></span>
+                </td>
+                <td style="width:200px;" width="200" align="right" valign="top">
+                    <script type="text/javascript">
+                    google_ad_client = "ca-pub-8670195921463766";
+                    /* Rozszerzenie bramka ERA SMS - z boku */
+                    google_ad_slot = "7105013515";
+                    google_ad_width = 160;
+                    google_ad_height = 600;
+                    </script>
+                    <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+                </td>
+            </tr>
+        </table>
+
+        <div style="display: none;">
+            <div class="add-contact-form">
+                <form class="add-contact-form" action="#" method="get" onsubmit="return false;">
+                <p>
+                    <input type="text" placeholder="nazwa kontaktu" required="true" name="contact-name" id="contact-name"/>
+                </p>
+                <p>
+                    <input type="tel" placeholder="numer telefonu" required="true" name="contact-phone" id="contact-phone"/>
+                </p>
+                <input type="submit" style="display: none;"/>
+                </form>
+            </div>
+            <div class="add-phone-form">
+                <form class="add-phone-form" action="#" method="get" onsubmit="return false;">
+                <p>
+                    <input type="tel" placeholder="nowy numer telefonu" required="true" name="contact-phone" id="contact-phone-add"/>
+                </p>
+                <input type="submit" style="display: none;"/>
+                </form>
+            </div>
+            <div id="send-sms-dialog">
+                <form class="send-text-form" action="#" method="get" onsubmit="return false;">
+                    <p>
+                        <textarea id="sms-body" cols="35" rows="6"></textarea><br/>
+                        <span class="body-info">
+                            <span class="char_cnt">0</span> znaków wpisanych,
+                            pozostało <span class="char_left">1600</span> znaków.<br/>
+                            Ilość wysłanych wiadomości: <span class="sms_cnt">0</span><br/>
+                            Szcowany koszt: <span class="cost_txt">0</span>
+                        </span>
+                    </p>
+                    <input type="submit" style="display: none;"/>
+                </form>
+            </div>
+        </div>
+
+    </body>
+</html>

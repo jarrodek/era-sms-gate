@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Options</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="css/app.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/options.js"></script>
+    <script type="text/javascript" src="js/helper.js"></script>
+    <script type="text/javascript" src="js/view_helper.js"></script>
+    <script type="text/javascript">
+        function pageLoad(){
+            MenuBuilder.items.unshift({'label':'firstrun','path':'firstrun.html'});
+            MenuBuilder.build();
+            document.getElementById('login-handler').addEventListener('click', function(e){
+                e.preventDefault();
+                var vars = chrome.extension.getBackgroundPage().VARS;
+                chrome.tabs.create({url: vars.signInUrl});
+            });
+        }
+    </script>
+    <style type="text/css">
+div.firstrun-container{
+    width: 900px;
+    margin: 25px auto;
+}
+table.firstrun{
+    width: 900px;
+}
+table.firstrun > tbody > tr > td{
+    width: 450px;
+    vertical-align: top;
+}
+table.firstrun > tbody > tr > td:first-child{
+    
+}
+table.firstrun > tbody > tr > td:last-child{
+    
+}
+div.img-holder{
+    margin-top: 10px;
+    padding: 5px;
+    background-color: #B6B6B6;
+    width: 380px;
+    height: 395px;
+    -webkit-box-shadow: 0px 0px 16px rgba(136, 136, 136,0.2);
+    border-radius: 3px;
+}
+    </style>
+</head>
+<body onload="pageLoad()">
+    <nav class="main-menu"></nav>
+
+    <h1>Bramka Era SMS - pierwsze uruchomienie :)</h1>
+
+    <div class="firstrun-container">
+    <table cellpadding="0" cellspacing="0" class="firstrun">
+        <thead>
+            <tr>
+                <th>Krok pierwszy</th>
+                <th>Krok drugi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="img-holder">
+                        <img src="images/firstrun/login.png" alt="Zaloguj się"/>
+                    </div>
+                    <a href="#" id="login-handler" onclick="return false;">Zaloguj się</a> do aplikacji. 
+                </td>
+                <td>
+                    <div class="img-holder">
+                        <img src="images/firstrun/options.png" alt="Ustaw opcje"/>
+                    </div>
+                    Ustaw dane swojego konta w zakładce <a href="options.html" id="options-handler">Opcje</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</body>
+</html>

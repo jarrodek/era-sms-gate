@@ -1,0 +1,124 @@
+{
+  "app_name": {
+    "message": "Bramka Era Sms"
+  },
+  "app_desc": {
+    "message": "Wysy\u0142aj sms-y z bramki Ery prosto z przegl\u0105darki. Obsługuje synchronizację kontaktów z Gmail oraz synchronizację wysłanych wiadomości z różnych przeglądarek!"
+  },
+  "options_page_title": {
+      "message": "Opcje bramki"
+  },
+  "history_page_title": {
+    "message":"Historia wiadomości"
+  },
+    "error": {
+        "message": "Błąd: $details$",
+        "description": "Generic error template. Expects error parameter to be passed in.",
+        "placeholders": {
+            "details": {
+                "content": "$1",
+                "example": "Ustaw konfigurację rozszerzenia."
+            }
+        }
+    },
+    "error_100": {
+        "message": "Musisz się zalogować!",
+        "description": "Informacja o braku logowania podczas wysyłania requesta do serwera. Msg: user_not_logged_in"
+    },
+    "error_101": {
+        "message": "Najpierw ustw swoją konfigurację w zakładce Opcje",
+        "description": "Kiedy wykonano requesta do serwera ale nie wysłąno wcześniej odpowiedniej konfiguracji. Msg: user_preferences_missing."
+    },
+    "error_102": {
+        "message": "Błąd ogólny aplikacji",
+        "description": "general_error"
+    },
+    "error_103": {
+        "message": "Błąd zapisu w bazie danych",
+        "description": "error_save_database."
+    },
+    "error_104": {
+        "message": "Zewnętrzny serwer bramki zwrócił nieznany błąd",
+        "description": "error_ext_srv_resp"
+    },
+    "error_400": {
+        "message": "Błąd komunikacji z aplikacją. Proszę spróbować później.",
+        "description": "Kiedy serwer zwraca status 400."
+    },
+    "options": {
+        "message": "Opcje",
+        "description": "Menu item: options"
+    },
+    "help": {
+        "message": "Pomoc",
+        "description": "Menu item: help"
+    },
+    "firstrun": {
+        "message": "Pierwsze uruchomienie",
+        "description": "Menu item: First run"
+    },
+    "contacts": {
+        "message": "Kontakty",
+        "description": "Menu item: contacts"
+    },
+    "history": {
+        "message": "Historia",
+        "description": "Menu item: history"
+    },
+    "www_site": {
+        "message": "Strona WWW",
+        "description": "Menu item: extensions web site"
+    },
+    "contacts_page_title":{
+        "message": "Kontakty SMS",
+        "description": "Page title: contacts"
+    },
+    "history_action_icon_title": {
+        "message": "Historia SMSów",
+        "description": "Icon title - sms conversations history"
+    },
+    "delete_action_icon_title": {
+        "message": "Usuń",
+        "description": "Icon title - delete action"
+    },
+    "sendsms_action_icon_title": {
+        "message": "Wyślij wiadomość SMS",
+        "description": "Icon title - send text message"
+    },
+    "edit_action_icon_title": {
+        "message": "Edycja",
+        "description": "Icon title - edit action"
+    },
+    "add_action_icon_title":{
+        "message": "Dodaj numer",
+        "description": "Icon title - add phone number action"
+    },
+    "click_to_edit": {
+        "message": "Kliknij aby edytować",
+        "description": "Text edit label - click to edit"
+    },
+    "error_send_processor_1": {
+        "message": "Awaria systemu po stronie Ery"
+    },
+    "error_send_processor_2": {
+        "message": "użytkownik nieautoryzowany. Sprawdź opcje i zapisz hasło!"
+    },
+    "error_send_processor_3": {
+        "message": "Dostęp do bramki Ery został zablokowany"
+    },
+    "error_send_processor_5": {
+        "message": "Błąd składni"
+    },
+    "error_send_processor_7": {
+        "message": "Wyczerpany limit SMS-ów"
+    },
+    "error_send_processor_8": {
+        "message": "Błędny adres odbiorcy"
+    },
+    "error_send_processor_9": {
+        "message": "Wiadomość zbyt długa"
+    },
+    "error_send_processor_10": {
+        "message": "Brak wymaganej liczby żetonów"
+    }
+}
