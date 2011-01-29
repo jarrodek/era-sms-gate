@@ -1,0 +1,12 @@
+<!-- Indices written at Mon, 24 Jan 2011 17:10:03 UTC -->
+
+<datastore-indexes>
+
+    <!-- Used 2 times in query history -->
+    <datastore-index kind="UserHistory" ancestor="false" source="auto">
+        <property name="gateType" direction="asc"/>
+        <property name="user" direction="asc"/>
+        <property name="sentTimestamp" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

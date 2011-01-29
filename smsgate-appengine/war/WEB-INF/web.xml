@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+	PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+	"http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+	<!-- Servlets -->
+
+	<servlet>
+		<servlet-name>AuthServlet</servlet-name>
+		<servlet-class>com.kalicinscy.smsgate.server.AuthServlet
+        </servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>OptionsServlet</servlet-name>
+		<servlet-class>com.kalicinscy.smsgate.server.ConfigurationServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>HistoryServlet</servlet-name>
+		<servlet-class>com.kalicinscy.smsgate.server.HistoryServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>SendServlet</servlet-name>
+		<servlet-class>com.kalicinscy.smsgate.server.SendServlet
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>EraPlServlet</servlet-name>
+		<servlet-class>com.kalicinscy.smsgate.server.EraPlResponseServlet
+		</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>SendServlet</servlet-name>
+		<url-pattern>/send</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>HistoryServlet</servlet-name>
+    	<url-pattern>/history</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/status</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/signout</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>OptionsServlet</servlet-name>
+        <url-pattern>/options</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>EraPlServlet</servlet-name>
+        <url-pattern>/era_PL/handler</url-pattern>
+    </servlet-mapping>
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	
+	<security-constraint>
+        <web-resource-collection>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+	
+</web-app>
