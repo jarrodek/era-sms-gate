@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="js/consts.js"></script>
+        <script type="text/javascript" src="js/chrome_ex_oauthsimple.js"></script>
+        <script type="text/javascript" src="js/chrome_ex_oauth.js"></script>
+        <script type="text/javascript" src="js/helper.js"></script>
+        <script type="text/javascript" src="js/background.js"></script>
+        <script type="text/javascript" src="js/sendsms.js"></script>
+        <script type="text/javascript" src="js/gsync.js"></script>
+        <script type="text/javascript" src="js/history_helper.js"></script>
+        <script type="text/javascript">
+            window.setTimeout(function(){
+                window.eraApp.init();
+            },1000);
+            VARS.sender = new SendSms();
+        </script>
+        <script type="text/javascript" src="js/analytics.js"></script>
+    </head>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Popup</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link href="css/app.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="js/consts.js"></script>
+        <script type="text/javascript" src="js/helper.js"></script>
+        <script type="text/javascript" src="js/send_processor.js"></script>
+        <script type="text/javascript" src="js/app_popup.js"></script>
+        <script type="text/javascript" src="js/history_helper.js"></script>
+        <script type="text/javascript" src="js/analytics.js"></script>
+    </head>
+    <body onload="new Gate();">
+        <form action="#" name="send-form" id="send-form" autocomplete="on">
+            <fieldset class="popup"><legend>Wyślij sms-a z bramki</legend>
+                <div class="form_row" id="tel_num_cont">
+                    <select name="numbers" id="tel_numbers">
+                        <option value="-1">Wybierz</option>
+                    </select>
+                </div>
+                <a class="contact-edit" href="contacts.html" onclick="chrome.tabs.create({url:'contacts.html'});return false;">Edytuj kontakty</a>
+                <a class="contact-edit" id="hitory-lnk" href="history.html" onclick="chrome.tabs.create({url:'history.html'});return false;">Historia</a>
+                <div class="form_row" style="display: none;" id="tel_num_txt_cont">
+                    <input min="9" max="11" placeholder="Do" type="tel" id="sendTo" value="" maxlength="11" size="14" name="sendTo" required="true"/>
+                    <a class="contact-edit" id="save-contact-lnk" href="#" onclick="return false;">Zapisz jako kontakt</a><br/>
+                </div>
+                <div class="form_row">
+                    <textarea min="1" name="body" id="body" cols="51" rows="4" placeholder="treść wiadomości..." required="true" autofocus="autofocus"></textarea><br/>
+                    <span class="body-info">
+                        <span id="char_cnt">0</span> znaków wpisanych, pozostało <span id="char_left">1600</span> znaków.<br/>
+                        Ilość wysłanych wiadomości: <span id="sms_cnt">0</span>
+                    </span>
+                </div>
+                <div class="form_row form_row_submit">
+                    <div class="thumb_contact_image"></div>
+                    <div class="form_value">
+                        <input onclick="trackButton(this.id);" type="submit" class="button" value="Wyślij" id="sendButton"/>
+                    </div>
+                    <div class="clearer">&nbsp;</div>
+                </div>
+                <div class="form_row form_balance">
+                    <table cellpadding="0" cellspacing="0" class="balance">
+                        <tr>
+                            <td class="balance-desc">Szacowany koszt</td>
+                            <td><span id="cost_txt">0</span></td>
+                        </tr>
+                        <tr>
+                            <td>Stan konta</td>
+                            <td>
+                                <span id="balance_txt">
+                                    nieznany
+                                </span>
+                                <img title="sprawdź teraz" src="images/view-refresh.png" class="popup-refresh-balance" alt="Odśwież"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="lastOperation">
+                    <p class="nomargin">Ostatnia operacja</p>
+                    <table class="form_row form_balance_last" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td>Koszt wysłania</td>
+                            <td id="last_message_cost"></td>
+                        </tr>
+                    </table>
+                </div>
+                <p id="log"></p>
+                <p style="color: #999; font-size: 10px;">Rozszerzenie to nie jest wspierane ani tworzone na zlecenie PTC Sp. z o.o. (operator sieci Era)</p>
+                
+                <span id="loader">
+                    <progress></progress>
+                </span>
+            </fieldset>
+        </form>
+<!--<script type="text/javascript">
+google_ad_client = "ca-pub-8670195921463766";
+/* Rozszerzenie Era SMS - popup (page action) */
+google_ad_slot = "3211238981";
+google_ad_width = 468;
+google_ad_height = 15;
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>-->
+    </body>
+</html>

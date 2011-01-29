@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pomoc</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="css/app.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="js/consts.js"></script>
+        <script type="text/javascript" src="js/helper.js"></script>
+        <script type="text/javascript" src="js/view_helper.js"></script>
+        <script type="text/javascript" src="js/analytics.js"></script>
+        <script type="text/javascript">
+            function loadHandler() {
+                MenuBuilder.build();
+
+                var imgs = document.querySelectorAll('span.srvimage')
+                for (var i = 0; i < imgs.length; i++) {
+                    var img = new Image();
+                    img.src = baseUrl + "/images/" + imgs[i].dataset['image'] + ".png";
+                    img.width = imgs[i].dataset['width'] ? imgs[i].dataset['width'] : 240;
+                    imgs[i].appendChild( img );
+                }
+
+                if (document.location.hash == '#signed_in') {
+                    var bg = chrome.extension.getBackgroundPage();
+                    bg.AppEvents.fire('app.connect.change', 'app-connected' );
+                    chrome.tabs.getCurrent(function(tab){
+                        chrome.tabs.remove(tab.id);
+                    });
+                }
+            }
+        </script>
+        <style type="text/css">
+            div.hint-wrapper{
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body onload="loadHandler()">
+        <nav role="menu" class="main-menu"></nav>
+        <h1 class="help">Pomoc</h1>
+
+        <div class="page-wrapper help" role="page">
+            <div class="help-navigation" role="navigation">
+                <div class="app-login">
+                    <div>Logowanie</div>
+                    <a href="#logon">
+                    <span class="srvimage" data-image="login"></span>
+                    </a>
+                </div>
+                <div class="ext-options">
+                    <div>Opcje</div>
+                    <a href="#options">
+                    <span class="srvimage" data-image="options"></span>
+                    </a>
+                </div>
+                <div class="ext-contacts">
+                    <div>Kontakty</div>
+                    <a href="#contacts">
+                    <span class="srvimage" data-image="contacts"></span>
+                    </a>
+                </div>
+                <div class="ext-contacts">
+                    <div>Historia</div>
+                    <a href="#history">
+                    <span class="srvimage" data-image="history"></span>
+                    </a>
+                </div>
+
+                <br style="clear: both"/>
+            </div>
+
+            <div class="help-content">
+                <h2>
+                    <a id="logon">Logowanie</a>
+                </h2>
+
+                <div class="hint-info" title="Po co logowanie gdziekolwiek?">
+                    <span class="help-desc-item long-desc-column">
+                        Wysyłając SMS-a z bramki za każdym razem dodawane jest Twoje hasło do adresu spod któego wysyłana jest wiadomość po stronie sewera Ery.
+                        Aby zwiększyć bezpieczeństwo tych danych (taką transmisję można teoretycznie "podsłuchać") hasło zapisane w aplikacji dodawane jest dopiero w ostatniej chwili
+                        przed wysłaniem zapytania do serwera Ery i nie można go odczytać.<br/>
+                        Najlepiej przedstawić to obrazkiem:
+                    </span><br/><br/>
+                    
+                    <span class="srvimage centerimage" data-image="graf2" data-width="800"></span><br/>
+
+                    <span class="help-desc-item long-desc-column">
+                        Twoje hasło do bramki nie jest już przechowywane na tym komputerze (jak dotychczas) tylko w aplikacji napisanej specjalnie dla tego rozszerzenia.<br/>
+                        Aby Twoje dane były bezpieczne uznałem, że należy je zabezpieczyć za pomocą loginu i hasła.
+                        Z kolei aby nie tworzyć kolejnych danych do logowania wykorzystane zostaje Twoje konto Google, dzięki któremu w dwa kliknięcia ustawiasz działanie aplikacji i tylko Ty odczytasz z serwera swoje dane:<br/>
+                    
+                    </span><br/><br/>
+
+                    <span class="srvimage centerimage" data-image="graf1" data-width="800"></span><br/>
+                </div>
+                <div class="hint-info" title="Czy można korzystać z aplikacji nie logując się do niej?">
+                    <span class="help-desc-item ">
+                        Nie. Aplikacja tak została zaprojektowana, że nie możliwe jest pobranie lub wysłanie danych bez autoryzacji za pomocą konta Google.
+                    </span>
+                </div>
+                <div class="hint-info" title="Jakie dane przechowywane są na serwerze aplikacji?">
+                    <span class="help-desc-item long-desc-column">
+                        W wersji 2.0 wprowadzono synchronizację historii wysłanych wiadomości i ustawień pomiędzy różnymi przeglądarkami Google Chrome, z których korzystasz (np. w pracy i w domu).
+                        Aby zapewnić taką funkcjonalność aplikacja musi w swojej bazie danych przechowywać dane takie jak historia wysłanych wiadomości (treść, odbiorca, koszt wysłania, data wysłania) oraz opcje (login, hasło, ustawienia synchronizacji).
+                        Dzięki temu w momencie zainstalowania rozszerzenia w zupełnie nowej przeglądarce wszystkie ustawienia i historia wiadomości od razu pojawią się w swoim miejscu.<br/>
+                        Być może używasz tylko jednej przeglądarki Google Chrome i nie potrzebujesz używać synchronizacji historii i ustawień. Wówczas wystarczy, że w opcjach wyłączysz synchronizację i dane nie będą wysyłane na serwer.
+                    </span>
+                </div>
+
+                <div class="hint-info" title="Czy moje dane mogą być komuś udostępniane?">
+                    <span class="help-desc-item">
+                        Nie były, nie są i na pewno nie będą!<br/>
+                        Tylko ty możesz odczytać dane ze swojego konta.
+                    </span>
+                </div>
+                <div class="hint-info" title="Po zalogowaniu się do aplikacji rozszerzenie nadal nie działa :(">
+                    <span class="help-desc-item">
+                        Jeszcze nie słyszałem o takim przypadku ale jeśli właśnie tego doświadczasz to napisz do mnie na maila: jarrodek+gates@gmail.com
+                    </span>
+                </div>
+
+                <h2>
+                    <a id="options">Opcje</a>
+                </h2>
+                <div class="hint-info" title="Co zmieniło się w wersji 2.0?">
+                    <span class="help-desc-item">
+                        Aktualnie tylko to, że dodano opcję synchronizacji historii i opcji.
+                    </span>
+                </div>
+                <div class="hint-info" title="Jak wyłączyć synchronizację opcji?">
+                    <span class="help-desc-item">
+                        Idź do opcji i pod przyciskiem zapisz kliknij na tekst pomocy: "Co się dzieje z moimi danymi po zapisaniu?".
+                        Po otworzeniu się informacji zaznacz pole "Wyłącz synchronizację"
+                    </span>
+                </div>
+                <div class="hint-info" title="Czy rozszerzenie działa bez zapisanie opcji na serwerze aplikajci?">
+                    <span class="help-desc-item">
+                        Nie. Wykonując zapytanie do bramki ery nie dane logowania są pobierane z ustawień na serwerze i nie bierze pod uwagę parametrów przesłanych z rozszerzenia. Tak jest bezpieczniej.
+                    </span>
+                </div>
+
+                <div class="hint-info" title="Co to jest typ bramki?">
+                    <span class="help-desc-item long-desc-column">
+                        Bramka sieci Era ma dwa rodzaje bramek: sponsorowana i multimedialna (omnix).
+                        Bramka sponsorowana to taka, w której nie musisz płacić za wysłanie SMS-a. Niestety można wysłać tylko ograniczoną ilość SMS-ów w ciągu doby.
+                        Inaczej jest w przypadku bramki multimedialnej. Wysyłasz dowolną ilość SMS-ów ale za każdy musisz zapłacić.
+                        Od Ciebie zależy wybór konta. Więcej informacji możesz znaleźć na stronach <a href="http://www.era.pl/pl/indywidualni/rozrywka/komunikacja/bramki_sms">Ery</a>.
+                    </span>
+                </div>
+                
+                <h2>
+                    <a id="contacts">Kontakty</a>
+                </h2>
+                <div class="hint-info" title="Jak dodać numer do kontaktów?">
+                    <div class="help-desc-item">
+                        Jest kilka sposobów na dodanie kontaktów do bazy danych.<br/>
+                        <ol>
+                            <li>
+                                <strong>Pupup</strong> (po kliknięciu na ikonę ozszerzenia
+                            <ul>
+                                <li>Otwórz popupa</li>
+                                <li>Z listy kontaktów wybierz: "wpisz ręcznie". Pojawi się pole tekstowe do wpisania numeru telefonu. Wpisz tam nowy numer.</li>
+                                <li>Kliknij w link "zapisz jako kontakt". Otworzy się edytor kontaktów, w którym po wpisaniu nazwy zapiszesz kontakt.</li>
+                                <li>
+                                    <span class="srvimage" data-image="popup-add-contact" data-width="395"></span><br/>
+                                </li>
+                            </ul>
+                            </li>
+                            <li>
+                                <strong>Edytor kontaktów</strong>
+                                <ul>
+                                    <li>Otwórz <a href="contacts.html" target="_blank">edytor kontaktów</a></li>
+                                    <li>Na górze po lewej kliknij w "Utwórz nowy kontakt". Pojawi się dialog z formularzem kontaktu.</li>
+                                    <li>Wypełnij dane kontaktu (numer telefonu i nazwę odbiorcy).</li>
+                                    <li>Kliknij przycisk "zapisz"</li>
+                                    <li>
+                                    <span class="srvimage" data-image="contacts-add-contact" data-width="400"></span><br/>
+                                </li>
+                                </ul>
+                            </li>
+                            <li><span class="feature-unavailable">Historia wiadomości</span> (dostępne w przyszłym wydaniu)</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="hint-info" title="Jak dodać więcej niż jeden numer do kontaktu?">
+                    <span class="help-desc-item">
+                        Kiedy masz już utworzony kontakt to w <a href="contacts.html" target="_blank">edytorze kontaktów</a>
+                        po prawej stronie opisu kontaktu pojawia się ikona: <img src="images/add.png" alt="ikona dodaj kontakt"/>.
+                        Klikając w nią otworzy się dialog dodania dodatkowego numeru.
+                    </span>
+                </div>
+                <div class="hint-info" title="Jak edytować dane kontaktu?">
+                    <span class="help-desc-item">
+                        Kiedy masz już utworzony kontakt to w <a href="contacts.html" target="_blank">edytorze kontaktów</a>
+                        po prawej stronie opisu kontaktu pojawia się ikona: <img src="images/add.png" alt="ikona dodaj kontakt"/>.
+                        Klikając w nią otworzy się dialog dodania dodatkowego numeru.
+                        <br/>
+                        <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/_-G1870yabQ?rel=0" frameborder="0" allowFullScreen></iframe>
+                    </span>
+                </div>
+                <div class="hint-info" title="Czy można dodać numer telefonu spoza Polski?">
+                    <span class="help-desc-item">
+                        Nie. Wygląda na to, że Era nie pozwala na wysyłanie wiadomości poza Polskę w związku z tym nie da się zapisać w rozszerzeniu numeru zagranicznego.
+                    </span>
+                </div>
+                <div class="hint-info" title="Czy można dodać numer telefonu spoza Polski?">
+                    <span class="help-desc-item">
+                        Nie. Wygląda na to, że Era nie pozwala na wysyłanie wiadomości poza Polskę w związku z tym nie da się zapisać w rozszerzeniu numeru zagranicznego.
+                    </span>
+                </div>
+                <div class="hint-info" title="Dlaczego pobierając kontakty z Gmail dostaję ostrzeżenie, że nie można zweryfikować aplikacji?">
+                    <span class="help-desc-item">
+                        Rozszerzenia do przeglądarki Google Chrome działają trochę inaczej od aplikacji webowych lub takich instalowanych na komputerze. Dlatego też na razie nie jest możliwe aby zamiast ostrzeżenia pojawiło się logo rozszerzenia :)
+                    </span>
+                </div>
+                <div class="hint-info" title="Dlaczego przy niektórych kontaktach pojawiają się zdjęcia tych osób?">
+                    <span class="help-desc-item">
+                        Są to obrazy pochodzące z Twoich kontaktów Gmail. Widzisz je tylko kiedy jesteś zalogowany do swojego konta Google.
+                    </span>
+                </div>
+                <h2>
+                    <a id="history">Historia</a>
+                </h2>
+
+                <div class="hint-info" title="Jak wygląda proces synchronizacji historii?">
+                    <span class="help-desc-item">
+                        Przygotowałem prezentację aby to opisać:
+                    </span>
+                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="510" src="http://www.youtube.com/embed/ynDijXhitCM?rel=0&amp;hd=1" frameborder="0" allowFullScreen></iframe>
+                </div>
+
+
+                <div class="hint-info" title="Jak długo przechowywana jest historia wiadomości?">
+                    <span class="help-desc-item">
+                        Tak długo dopóki nie zostanie przez Ciebie usunięta.
+                    </span>
+                </div>
+                
+                <div class="hint-info" title="Mam nową przeglądarkę a pojawiła mi się historia sprzed kilku miesięcy!">
+                    <span class="help-desc-item long-desc-column">
+                        Dzieje się tak dlatego, że została uruchomiona usługa synchronizacji historii pomiędzy przeglądarkami Google Chrome
+                        z których korzystasz w różnych miejscach. Gdy uruchamiana jest przeglądarka to rozszerzenie sprawdza na serwerze
+                        czy są nowe wiadomości wysłane z innej przeglądarki i jeśli tak to je pobiera.
+                        Dzięki temu nieważne czy jesteś w domu czy w pracy - rozszerzenie wygląda i działa tak samo.
+                    </span>
+                </div>
+
+                <h2>
+                    <a id="history">Inne</a>
+                </h2>
+                <div class="hint-info" title="Czy za to rozszerzenie trzeba zapłacić?">
+                    <span class="help-desc-item long-desc-column">
+                        Nie. To rozszerzenie nigdy nie będzie płatne.<br/>
+                        Jedyne za co musisz zapłacić to (niestety) za wysłanie wiadomości SMS.
+                        Aby wogóle korzystać z bramki Ery musisz wykupić tzw. żetony. Każdy SMS to kilka żetonów.
+                        Możesz dotąd wysyłać sms-y dopóki masz wykupione żetony. Doładowanie żetonów odbywa się po zalogowaniu się w swoim koncie <a href="http://www.era.pl/pl/indywidualni/rozrywka/komunikacja/bramki_sms">bamki Era</a>.
+                    </span>
+                </div>
+                <div class="hint-info" title="Moja wiadomość nie dotarła pomimo prawidłowej wysyłki :(">
+                    <span class="help-desc-item long-desc-column">
+                        To rozszerzenie do przeglądarki Google Chrome jest tylko pośrednikiem pomiędzy Tobą
+                        a bramką Ery. Jeżeli ich bramka zwróciła status "wysłano" to znaczy dla rozszerzenia,
+                        że wszystko jest OK. Jeśli bramka zwraca błąd to jesteś o tym informowany.
+                        To rozszerzenie nie ma możliwości wpływu na czas dostarczenia wiadomości
+                        ponieważ jest to zależne od sieci Era i ewentualne reklamacje powinny być tam zgłaszane.
+                    </span>
+                </div>
+            </div>
+
+            
+            <div class="help-footer">
+
+                <h2>
+                <a id="credits">Credits</a>
+            </h2>
+
+                <div class="contact">
+                    Możesz skontaktować się z twórcą rozszerzenia pisząc pod adres jarrodek+gates@gmail.com
+                </div>
+                <div class="credits">
+                    To rozszerzenie zostało w całości zaprojektowane i wykonane przez Paweł Psztyć
+                    <br/>
+                    Użyte ikony pochodzą z Open Icon Library i są użyte na następujących licncjach:<br/>
+                    - Creative Commons licenses<br/>
+                    - LGPL licenses
+                    <br/><br/>
+                    Artwork &copy; Paweł Psztyć<br/>
+                    &copy; 2010-2011 Paweł Psztyć.
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

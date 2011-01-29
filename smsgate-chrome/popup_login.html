@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Popup</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link href="css/app.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="js/consts.js"></script>
+        <script type="text/javascript">
+            function loadPage(){
+                document.getElementById('login-handler').addEventListener('click', function(e){
+                    e.preventDefault();
+                    chrome.tabs.create({url: VARS.signInUrl});
+                });
+            }
+
+        </script>
+    </head>
+    <body onload="loadPage()">
+        <div class="login-popup">
+            <p>
+                <a href="#" id="login-handler" onclick="return false;">Zaloguj się</a> za pomocą swojego konta Google&trade; aby skorzystać z aplikacji.
+            </p>
+            <p class="help-info">
+                <a href="help.html#app-login" onclick="chrome.tabs.create({url: 'help.html#app-login'});return false;">Dowiedz się więcej</a> po co potrzebujesz się zalogować w aplikacji.
+            </p>
+        </div>
+    </body>
+</html>

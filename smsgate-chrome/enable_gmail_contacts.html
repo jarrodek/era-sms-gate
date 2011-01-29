@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Synchronizacja z Gmail</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="css/app.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript">
+        function enableGSynch(){
+            var eraApp = chrome.extension.getBackgroundPage().eraApp;
+            eraApp.initGSynch(true);
+        }
+    </script>
+  </head>
+  <body onload="enableGSynch();">
+      <h1>Kontakty są teraz synchronizowane.</h1>
+      <p>Możesz zamknąć tę stronę. Akcja synchronizacji będzie kontynuowana póki uruchomiona jest przeglądarka.</p>
+  </body>
+</html>
