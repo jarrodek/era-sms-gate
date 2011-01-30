@@ -147,7 +147,7 @@ function saveSettings(){
                     log.style.display = 'block'
                     return;
                 } else {
-                    localStorage.configUpdate = ( new Date().getTime() / 1000 );
+                    localStorage.configUpdate = getUTCtimeStamp();
                     log.innerHTML = 'Zmiany zostały zapisane';
                     log.style.display = 'block'
                 }

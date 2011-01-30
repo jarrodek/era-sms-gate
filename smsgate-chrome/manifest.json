@@ -20,8 +20,8 @@
   "permissions": [
     "tabs",
     "https://era-sms.appspot.com/*",
-    "http://googleads.*/*",
     "http://*.doubleclick.net/*",
+    "http://jarrod.local.com/*",
     "http://www.google.com/m8/feeds/*",
     "https://www.google.com/accounts/OAuthGetRequestToken",
     "https://www.google.com/accounts/OAuthAuthorizeToken",

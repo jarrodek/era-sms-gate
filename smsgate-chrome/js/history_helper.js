@@ -15,6 +15,7 @@ var History = {
 
         app.sendToApp(VARS.historyUrl+params, null, function(data){
             data = JSON.parse(data);
+            
             if( data.cursor && data.data ){
                 var _cursor = data.cursor;
                 var history = data.data;
@@ -23,6 +24,7 @@ var History = {
                     worker.onmessage = function (event) {
                         var data = event.data;
                         if( data.payload == 'getItems' ){
+                            console.log(data)
                             History.getHistoryItems(data.data);
                         } else if( data.payload == "log" ){
                             console.log( "debug: ", data.data  )
@@ -37,7 +39,7 @@ var History = {
             } else if( data.error.code == 200 ){
                 //no more posts
                 cursor = null;
-                localStorage.historyAppUpdate = new Date().getTime();
+                localStorage.historyAppUpdate = getUTCtimeStamp();
             }
         },'GET');
     },
@@ -52,7 +54,7 @@ var History = {
         }
         params = params.substr(1);
         app.sendToApp(VARS.historyUrl, params, function(data){
-            localStorage.historyAppUpdate = new Date().getTime();
+            localStorage.historyAppUpdate = getUTCtimeStamp();
             data = JSON.parse(data);
             var worker = new Worker('js/history_worker.js');
             worker.onmessage = function (event) {

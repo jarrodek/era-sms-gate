@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Brak konfiguracji</title>
+
+        <style type="text/css">
+            body{
+                color:#111122;
+                font-size: 12px;
+                font-family: sans-serif, Tahoma;
+                padding-bottom:1px;
+                text-shadow:1px 1px 0px rgba(255,255,255,0.8);
+            }
+            a {
+                color:#CC0099;
+                text-decoration:none;
+                text-shadow:1px 1px 0px rgba(255,255,255,0.8);
+            }
+            img.icon{
+                float:left;
+                margin-right: 7px;
+            }
+            div.dialog-body{
+                width: 270px;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div class="dialog-body">
+            <img src="../images/icon_48.png" alt="Logo" class="icon">
+            <p class="dialog">
+                Nie zostały ustawione opcje!<br/>
+                Zrób to w <a href="options.html" onclick="chrome.tabs.create({url:'options.html'});return false;">opcjach</a> rozszerzenia i naciśnij przycisk "zapisz".
+            </p>
+        </div>
+    </body>
+</html>

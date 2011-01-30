@@ -31,11 +31,12 @@ SmsHistory.prototype.init = function(){
     var self = this;
     var db = DatabaseHelper.getConnection();
     db.transaction(function(tx) {
+        
         var query = "SELECT count(*) as count, History.ID, History.number as h_number, History.body, "
         query += "max(History.sent) as sent, Contact.name, Phone.number, Contact.ID as CID "
         query += "FROM history as History LEFT OUTER JOIN contacts as Contact ON Contact.ID = History.contact_id "
         query += "LEFT OUTER JOIN phones as Phone ON Phone.ID = History.number_id "
-        query += "GROUP BY History.contact_id  ORDER BY History.sent DESC";
+        query += "GROUP BY History.contact_id, History.number  ORDER BY History.sent DESC";
         tx.executeSql(query,[],handleData, function(a,b){console.log('err',a,b);});
     });
 
@@ -54,19 +55,53 @@ SmsHistory.prototype.init = function(){
     }
 
     function deleteSelectedMessages(){
+
+        var remoteDelete = document.getElementById("remote-remove").checked;
+
         var checked = document.querySelectorAll('td.select-checkbox-column > input[type="checkbox"]:checked');
         var len = checked.length;
         for (var i = 0; i < len; i++) {
             var parent = checked[i].getParent('tr');
-            var ID = parent.dataset['cid'];
-            var number = parent.dataset['number'];
+            var params = {
+                number:parent.dataset['number'],
+                ID:parent.dataset['cid']
+            }
             parent.parentNode.removeChild(parent);
+
             db.transaction(function(tx) {
-                var query = "DELETE FROM history WHERE contact_id = ? OR number = ?";
-                tx.executeSql(query,[ID,number],function(){},function(tx,error){console.error(error);});
-            });
+                 if( remoteDelete ){
+                    //get message hashes
+                    var qSelect = "SELECT hash FROM history WHERE contact_id = ? OR number = ? AND hash IS NOT NULL";
+                    tx.executeSql(qSelect,[this.ID,this.number],function(tx,res){
+                        if(res.rows.length > 0){
+                            var bg = chrome.extension.getBackgroundPage();
+                            var hashes = "&payload=remove";
+                            for (var i = 0, item = null; i < res.rows.length; i++) {
+                                item = res.rows.item(i);
+                                hashes += "&h[]="+item.hash;
+                                if( i%30 == 0 ){
+                                    bg.eraApp.sendToApp(VARS.historyUrl+hashes,null,function(){},'DELETE');
+                                    hashes = "&payload=remove";
+                                }
+                            }
+                            if( hashes != "&payload=remove" )
+                                bg.eraApp.sendToApp(VARS.historyUrl+hashes,null,function(){},'DELETE');
+
+                            var query = "DELETE FROM history WHERE contact_id = ? OR number = ?";
+                            tx.executeSql(query,[this.ID,this.number],function(){},function(tx,error){console.error(error);});
+                        }
+                    }.bind(this),function(tx,error){console.error(error);});
+                } else {
+                    var query = "DELETE FROM history WHERE contact_id = ? OR number = ?";
+                    tx.executeSql(query,[this.ID,this.number],function(){},function(tx,error){console.error(error);});
+                }
+                
+                
+            }.bind(params));
         }
-        if( document.querySelector('table.history-table > tr').length == 0 ){
+
+
+        if( document.querySelector('table.history-table > tr') == null ){
             setEmptyListBody();
         }
 
@@ -249,14 +284,6 @@ SmsHistory.prototype.appendHistoryRow = function(item, prepend){
 
         var contact_id = parent.dataset['cid'];
         if(contact_id=="null"){
-            /*CID: null
-ID: 48
-body: "aaa"
-count: 1
-h_number: 510510510
-name: null
-number: null
-sent: "2011-01-21 18:49:54"*/
             self.loadContactMessages(null,parent.dataset['number']);
         } else {
             self.loadContactMessages(contact_id);
@@ -457,8 +484,23 @@ SmsHistory.prototype.sendSmsToContact = function(){
 }
 SmsHistory.prototype.remove = function(id){
     var db = DatabaseHelper.getConnection();
+    var remoteDelete = document.getElementById("remote-remove").checked;
+    var query = "DELETE FROM history WHERE ID = ?";
     db.transaction(function(tx) {
-        var query = "DELETE FROM history WHERE ID = ?";
-        tx.executeSql(query,[id],function(){},function(tx,error){console.error(error);});
+         if( remoteDelete ){
+            var qSelect = "SELECT hash FROM history WHERE ID = ? AND hash IS NOT NULL";
+            tx.executeSql(qSelect,[id],function(tx,res){
+                if(res.rows.length > 0){
+                    var bg = chrome.extension.getBackgroundPage();
+                    var hashes = "&payload=remove";
+                    var item = res.rows.item(0);
+                    hashes += "&h[]="+item.hash;
+                    bg.eraApp.sendToApp(VARS.historyUrl+hashes,null,function(){},'DELETE');
+                    tx.executeSql(query,[id],function(){},function(tx,error){console.error(error);});
+                }
+            });
+         } else {
+            tx.executeSql(query,[id],function(){},function(tx,error){console.error(error);});
+         }
     });
 }
