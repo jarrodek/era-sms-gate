@@ -108,7 +108,7 @@ App.prototype.setUpAppFirstConfig = function(){
         if ( (this.readyState == 4) && (this.status == 200) ) {
             var data = JSON.parse(xhr.responseText);
             if( !data.error ){
-                localStorage.configUpdate = ( new Date().getTime() / 1000 );
+                localStorage.configUpdate = getUTCtimeStamp();
                 localStorage.gatePassword = null;
                 context.initialConfigUploadStarted = false;
                 context.synchHistory();
@@ -128,6 +128,34 @@ App.prototype.loadObservers = function(){
         //uruchomienie synchronizacji ustawień i historii
         context.synchSettings();
     });
+
+    AppEvents.observe('contacts.update', function(e){
+        chrome.tabs.getAllInWindow(null, function(tabs){
+            var cnt = tabs.length;
+            for( var i=0; i<cnt; i++){
+                var tabUrl = (tabs[i].url).toString();
+                if( tabUrl.indexOf('contacts.html') != -1 ){
+                    var port = chrome.tabs.connect(tabs[i].id);
+                    port.postMessage({payload:'reload-catalog'});
+                }
+                if( tabUrl.indexOf('enable_gmail_contacts.html') != -1 ){
+                    chrome.tabs.remove(tabs[i].id);
+                }
+            }
+        });
+
+        //revalidate history database data
+        var worker = new Worker('js/history_worker.js');
+        worker.onerror = function (event) {
+            console.error( "From history worker error (synchHistory): ", event )
+        }
+        worker.onmessage = function (event) {
+            if( event.data.payload == "log" ){
+                console.log( "debug: ", event.data.data  )
+            }
+        }
+        worker.postMessage({payload:'revalidate'});
+    }.bind(this));
 }
 
 /**
@@ -138,6 +166,7 @@ App.prototype.loadObservers = function(){
 App.prototype.requireLogin = function(){
     this.setPageIconAction('not-connected');
     this.sendToApp(VARS.loginStatusUrl, null, function(status){
+        //console.dir(status);
         try{
         if( status == STATUS.LOGIN_REQUIRED ){
             AppEvents.fire('app.connect.change', 'login-required' );
@@ -191,14 +220,16 @@ App.prototype.setPageIconAction = function(status){
 }
 App.prototype.sendToApp = function(sendUrl,sendData,listener,method){
     method = method || 'POST';
-    VARS.req.open(method, sendUrl, true);
-    VARS.req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    VARS.req.setRequestHeader('X-Same-Domain', 'true');  // XSRF protector
+    listener = listener || function(){}
+    var req = new XMLHttpRequest();
+    req.open(method, sendUrl, true);
+    req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    req.setRequestHeader('X-Same-Domain', 'true');  // XSRF protector
     
-    VARS.req.onreadystatechange = function() {
+    req.onreadystatechange = function() {
         if (this.readyState == 4) {
-            if (VARS.req.status == 200) {
-                var body = VARS.req.responseText;
+            if (this.status == 200) {
+                var body = this.responseText;
                 if (body.indexOf('OK') == 0) {
                     listener(body);
                 } else if (body.indexOf('LOGIN_REQUIRED') == 0) {
@@ -207,12 +238,12 @@ App.prototype.sendToApp = function(sendUrl,sendData,listener,method){
                     listener(body);
                 }
             } else {
-                listener(VARS.req.status, VARS.req.responseText);
+                listener(this.status, this.responseText);
             }
         }
     }
     var data = sendData;
-    VARS.req.send(data);
+    req.send(data);
 }
 
 App.prototype.initGSynch = function(force){
@@ -253,12 +284,12 @@ App.prototype.synchSettings = function(){
     if( this.initialConfigUploadStarted ) return;
     var lastUpdate = localStorage.configUpdate || 0;
     var context = this;
-    var URL = VARS.updateOptionsUrl + "t="+lastUpdate;
+    var URL = VARS.updateOptionsUrl + "&t="+lastUpdate;
     this.sendToApp(URL, null , function(data){
 
         if( data == STATUS.LOGIN_REQUIRED ){
             return;
-        } else if(data.substr(0, 2) == STATUS.SUCCESS){
+        } else if(data && isNaN( data ) && data.substr(0, 2) == STATUS.SUCCESS){
 
             if( localStorage.synchGmail == "true" ){
                 oauth = ChromeExOAuth.initBackgroundPage(oauthParams);
@@ -270,6 +301,10 @@ App.prototype.synchSettings = function(){
         var resp = JSON.parse(data);
 
         if( resp.error ){ //user do not have any saved configurations
+            if( resp.error.code && resp.error.code == 101 ){
+                notifyNoConfig();
+            }
+            context.synchHistory();
             return;
         }
 
@@ -294,7 +329,7 @@ App.prototype.synchSettings = function(){
                 oauth = ChromeExOAuth.initBackgroundPage(oauthParams);
             }
         }
-        localStorage.configUpdate = ( new Date().getTime() / 1000 );
+        localStorage.configUpdate = getUTCtimeStamp();
         context.synchHistory();
     }, "GET");
 }
@@ -411,6 +446,15 @@ var AppConnector = {
         xhr.send();
     }
 }
+
+function notifyNoConfig(){
+    var notification = webkitNotifications.createHTMLNotification(
+        'pages/no_config_notify.html'
+    );
+    notification.show();
+}
+
+
 var GateProperties = {
     cost : {
         sms:18,

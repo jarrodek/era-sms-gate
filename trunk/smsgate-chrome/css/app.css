@@ -689,3 +689,6 @@ div.help-footer{
 div.help-footer > div.credits{
     margin-top: 20px;
 }
+span.remote-remove{
+    font-size: 11px;
+}

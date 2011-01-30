@@ -6,7 +6,7 @@ var HistoryWorker = {
         db.transaction(function(tx) {
             var hashes = "'"+data.join("','")+"'";
             var query = "SELECT hash FROM history WHERE hash IN ("+hashes+")";
-//            postMessage({payload:'log',data:query});
+            postMessage({payload:'log',data:query});
             var hashCopy = data;
             tx.executeSql(query, [],function(tx, result){
                 var max = result.rows.length;
@@ -14,11 +14,12 @@ var HistoryWorker = {
                     for (var i = 0; i < max; i++) {
                         var item = result.rows.item(i);
                         var gotHash = item.hash;
+                        postMessage({payload:'log',data:gotHash});
                         var index = hashCopy.indexOf( gotHash );
                         if( index == -1 ) continue;
 
                         var to = ( (index + 1) == hashCopy.length ) ? null : (index + 1);
-                        hashCopy.remove(index, to);
+                        hashCopy.remove(index, index);
                     }
                 }
                 postMessage({payload:'getItems',data:hashCopy});
@@ -105,14 +106,34 @@ var HistoryWorker = {
 
                         postMessage({payload:'saved',event:eventData});
 
-                    },function(tx,err){
-                        throw new Error( err.message );
-                    });
+                    },function(tx,err){throw new Error( err.message );});
                 },
                 function(tx, error){
                     throw new Error( error.message );
                 }
             );
+        });
+    },
+    /**
+     * History data stored in database have contact_id and phone_id columns.
+     * If contacts table has changed it's shoud requery database for update
+     * history items that don't have contact_id data.
+     */
+    revalidate: function(){
+        var query = "SELECT ID, contact_id, number FROM phones WHERE number IN (SELECT number FROM history WHERE contact_id IS NULL GROUP BY number)";
+        var db = DatabaseHelper.getConnection();
+        db.transaction(function(tx) {
+            tx.executeSql(query, [], function(tx,result){
+                var len = result.rows.length;
+                if( len > 0 ){
+                    for (var i = 0; i < len; i++) {
+                        var row = result.rows.item(i);
+                        var query = "UPDATE history SET contact_id = ?, number_id = ? WHERE number = ?";
+                        tx.executeSql(query, [row.contact_id,row.ID,row.number]);
+                    }
+                    
+                }
+            },function(tx,err){throw new Error( err.message );});
         });
     }
 };
@@ -125,5 +146,7 @@ onmessage = function (event) {
         HistoryWorker.saveHistory(data.data);
     } else if( data.payload == "saveitem" ){
         HistoryWorker.saveItem(data.data);
+    } else if( data.payload == "revalidate" ){
+        HistoryWorker.revalidate();
     }
 }

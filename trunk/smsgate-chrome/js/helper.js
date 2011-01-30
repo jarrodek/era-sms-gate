@@ -944,3 +944,6 @@ var SenderBox = {
         return true;
     }
 }
+function getUTCtimeStamp(){
+    return (new Date()).getTime()-Date.UTC(1970,0,1);
+}

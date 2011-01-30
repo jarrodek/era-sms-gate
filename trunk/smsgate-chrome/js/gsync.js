@@ -84,19 +84,12 @@ Gsync.prototype.sync = function(contact){
     this.insertContact(contact.name, _tmp_phone, contact.id, contact.photo);
 }
 Gsync.prototype.updateTabs = function(){
-    chrome.tabs.getAllInWindow(null, function(tabs){
-        var cnt = tabs.length;
-        for( var i=0; i<cnt; i++){
-            var tabUrl = (tabs[i].url).toString();
-            if( tabUrl.indexOf('contacts.html') != -1 ){
-                var port = chrome.tabs.connect(tabs[i].id);
-                port.postMessage({payload:'reload-catalog'});
-            }
-            if( tabUrl.indexOf('enable_gmail_contacts.html') != -1 ){
-                chrome.tabs.remove(tabs[i].id);
-            }
-        }
-    });
+
+
+    var e = chrome.extension.getBackgroundPage().AppEvents;
+    e.fire('contacts.update', null);
+
+    
 }
 Gsync.prototype.insertContact = function(name, number, id, photo){
     var context = this;
