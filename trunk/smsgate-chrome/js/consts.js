@@ -1,5 +1,5 @@
-var baseUrl = 'http://jarrod.local.com';
-//var baseUrl = 'https://era-sms.appspot.com';
+//var baseUrl = 'http://jarrod.local.com';
+var baseUrl = 'https://era-sms.appspot.com';
 var extensionType = "era_PL";
 
 var _signInUrl = null;
