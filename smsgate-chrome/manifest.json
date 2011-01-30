@@ -2,7 +2,7 @@
   "name": "__MSG_app_name__",
   "description": "__MSG_app_desc__",
   "background_page": "background.html",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "default_locale": "pl",
   "icons": {
       "128": "images/icon_128.png",
@@ -20,8 +20,6 @@
   "permissions": [
     "tabs",
     "https://era-sms.appspot.com/*",
-    "http://*.doubleclick.net/*",
-    "http://jarrod.local.com/*",
     "http://www.google.com/m8/feeds/*",
     "https://www.google.com/accounts/OAuthGetRequestToken",
     "https://www.google.com/accounts/OAuthAuthorizeToken",
