@@ -49,9 +49,11 @@ public final class ConfigHelper {
 		}
 		
     	PersistenceManager pm = ConfigHelper.getPersistenceManager();
-    	
     	UserPreferences userdata = UserPreferences.getUserGate(pm, u, gateType);
-    	
+//    	System.out.println(u.getEmail() );
+//    	if( userdata != null ){
+//    		System.out.println(userdata.getGateLogin());
+//    	}
     	if( userdata == null || userdata.getGateLogin() == null || userdata.getGateLogin().equals("") ){
     		throw new UserPreferencesException("Empty data");
     	}

@@ -34,7 +34,6 @@ public class SendServlet extends HttpServlet {
 	@Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
-		// Basic XSRF protection (TODO: remove X-Extension in a future release for consistency)
         if (req.getHeader("X-Same-Domain") == null) {
             resp.setStatus(400);
             resp.getWriter().println(Status.ERROR_GENERAL + " (Missing header)");

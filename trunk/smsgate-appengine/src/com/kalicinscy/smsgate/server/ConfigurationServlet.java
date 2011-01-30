@@ -142,6 +142,7 @@ public class ConfigurationServlet extends HttpServlet {
 		
 		if( isConfigUpdateRequest && extensionUpdateTime != 0 ){
 			long difference = sec -  extensionUpdateTime;
+			
 			//aby konfiguracja tutaj była nowsza od tej w rozszerzeniu
 			//to różnica czasów musi być większa od 0
 			if( difference < 0 ){
