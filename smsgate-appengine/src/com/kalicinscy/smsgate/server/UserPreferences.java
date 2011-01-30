@@ -201,6 +201,7 @@ public class UserPreferences {
 			return null;
 		}
 		String keyName = uid + "#" + type;
+		//System.out.println("Key: "+keyName);
 		UserPreferences userdata = null;
 		try{
     		userdata = pm.getObjectById(UserPreferences.class,keyName);

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Logger;
 
+import javax.jdo.PersistenceManagerFactory;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +28,35 @@ public class HistoryServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = -6845526474231431604L;
+	
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		resp.setStatus(200);
+//		System.out.println("HIT");
+		String[] hash = req.getParameterValues( "h[]" );
+		if( hash == null || hash.length == 0 ){
+			ConfigHelper.writeStatusJSON(Status.OK, resp);
+        	return;
+		}
+		
+		User u = null;
+		try {
+			u = ConfigHelper.getAppUser();
+		} catch (IOException e1) {}
+		
+		if( u == null ){
+			ConfigHelper.writeStatusJSON(Status.ERROR_USER_NOT_LOGGED_IN, resp);
+			return;
+		}
+		PersistenceManagerFactory mpf = PMF.get();
+		
+		UserHistory.removeHistory(mpf.getPersistenceManager(),hash,u);
+		
+		ConfigHelper.writeStatusJSON(Status.OK, resp);
+	}
 	
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

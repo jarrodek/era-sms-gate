@@ -1,8 +1,10 @@
 package com.kalicinscy.smsgate.server;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -237,7 +239,7 @@ public class UserHistory {
 		
 		com.google.appengine.api.datastore.Query q = new com.google.appengine.api.datastore.Query( "UserHistory" );
 		q.addFilter("user", com.google.appengine.api.datastore.Query.FilterOperator.EQUAL, user);
-		q.addFilter("sentTimestamp", com.google.appengine.api.datastore.Query.FilterOperator.GREATER_THAN, new Date( (fromTime*1000) ));
+		q.addFilter("sentTimestamp", com.google.appengine.api.datastore.Query.FilterOperator.GREATER_THAN, new Date( fromTime ));
 		
 		if( gateType != null ){
 			q.addFilter("gateType", com.google.appengine.api.datastore.Query.FilterOperator.EQUAL, gateType);
@@ -273,6 +275,27 @@ public class UserHistory {
 		FetchOptions fetchOptions = Builder.withLimit(1);
 		
 		return pq.asList(fetchOptions);
+	}
+	
+	public static void removeHistory(PersistenceManager pm, String[] hashes, User u){
+		javax.jdo.Query query = pm.newQuery(UserHistory.class,":p.contains(hash)");
+		
+		int all = hashes.length;
+		List<String> _list = new ArrayList<String>();
+		for( int i=0; i< all; i++ ){
+			if( _list.size() == 30 ){
+				query.deletePersistentAll( _list );
+				_list.clear();
+//				System.out.println("delete prevs");
+			} else {
+				_list.add( hashes[i] );
+//				System.out.print(i+", ");
+			}
+		}
+		if( _list.size() > 0 ){
+			query.deletePersistentAll( _list );
+//			System.out.println("delete rest");
+		}
 	}
 	
 
