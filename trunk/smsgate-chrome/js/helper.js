@@ -1,12 +1,12 @@
 var NumberFormatter = {
     checkFormat: function(number){
-        number = number.replace(/[\s-]/, '');
+        number = number.replace(/[\s-]/gi, '');
         var patt = /(\+)?(\d{2})?[7|6|5]{1}\d{8}$/;
         var result=patt.test(number);
         return result;
     },
     formatNumber: function(number){
-        number = number.replace(/[\s-]/, '');
+        number = number.replace(/[\s-]/gi, '');
         number = number.replace('+', '');
         if( number.toString().length == 9 ){
             number = "48"+number;

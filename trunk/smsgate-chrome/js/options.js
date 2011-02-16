@@ -70,7 +70,7 @@ function loadOptions(){
     });
 
     var oauth = chrome.extension.getBackgroundPage().oauth;
-    if(oauth.hasToken()){
+    if(oauth != null && oauth.hasToken()){
         document.getElementById("sync-gmail-field").style.display = 'block';
         document.getElementById("sync-gmail-field-info").style.display = 'none';
     } else {
@@ -99,10 +99,12 @@ function validateNumber(number){
 }
 function saveSettings(){
     var login = document.getElementById("login").value;
+    
     if(!validateNumber(login)){
         alert("Wprowad\u017a prawidłowy login bramki ERA.\nNp: 48 602 602 602");
         return;
     }
+    login = NumberFormatter.formatNumber( login );
     var password = document.getElementById("passwd").value;
     var updateStr = "a=b";
     if( password != "" ){
