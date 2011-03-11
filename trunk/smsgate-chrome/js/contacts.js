@@ -190,7 +190,7 @@ Contacts.prototype.search = function(){
             //string, name
             rows = document.querySelectorAll('table.contacts-table > tr[search-query]');
         } else {
-            rows = document.querySelectorAll('table.contacts-table span.contact-phone-wrapper[search-query]');
+            rows = document.querySelectorAll('table.contacts-table .contact-phone-wrapper[search-query]');
         }
         var cnt = rows.length;
         var hidden = 0;
