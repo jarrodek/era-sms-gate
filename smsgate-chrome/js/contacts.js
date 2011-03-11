@@ -273,6 +273,17 @@ Contacts.prototype.createTableWrapper = function(){
 }
 Contacts.prototype.createTableRow = function(data){
     var tr = document.createElement('tr');
+    
+    tr.addEventListener('click', function(e){
+        if(e.target.hasClass("td-name")){
+            var contactId = e.target.getParent("tr").dataset['contact'];
+            if( contactId && !isNaN(contactId) ){
+                SenderBox.createBox(contactId);
+            }
+            
+        }
+    }, false);
+    
     var name = document.createElement('td');
     var phones = document.createElement('td');
     var actions = document.createElement('td');
@@ -282,7 +293,9 @@ Contacts.prototype.createTableRow = function(data){
 
     tr.id = 'row-'+data.id;
     tr.setAttribute('search-query', data.name);
-
+    tr.setAttribute('data-contact', data.id);
+    
+    
     name.className = 'td-name';
     phones.className = 'td-phones';
     actions.className = 'td-actions';
@@ -428,119 +441,14 @@ Contacts.prototype.observeAddNumberAction = function(icon, contactId){
     });
 }
 Contacts.prototype.observeSendSMSIcon = function(icon, phoneId){
-    var context = this;
-    function sendSmsCallback(icon, phoneId){
-        var bg = chrome.extension.getBackgroundPage();
-        if( !bg.eraApp.isConnected() ){
-            UI.dialog( {
-                width: 400,
-                height: 160,
-                content: '<p>Brak po\u0142ączenia z aplikacją. Spróbuj ponownie później</p>',
-                title: 'Nie mo\u017cna wys\u0142ać SMSa :(',
-                buttons: [
-                    {label:'Zamknij',action:function(){
-                        UI.closeDialog();
-                    },type:'button'}
-                ]
-            } );
-        } else {
-
-            function inputBodyHandler(e){
-                var str = StringFormatter.formatMessageLocale( this.value );
-                document.querySelector("div.dialog-content form.send-text-form span.char_cnt").innerHTML = str.length;
-
-                var max = Gate.maxSigns[Gate.type];
-                if(max != -1){
-                    if(str.length > max){
-                        str = str.substr(0,max);
-                    }
-                    document.querySelector("div.dialog-content form.send-text-form span.char_left").innerHTML = (max-str.length);
-                }
-                var signs_per_one = Gate.signs[Gate.type];
-                var one_cost = Gate.cost[Gate.type];
-                var _x = Math.floor(str.length/signs_per_one);
-                if( str.length%signs_per_one != 0 ){
-                    _x++;
-                }
-                document.querySelector("div.dialog-content form.send-text-form span.sms_cnt").innerHTML = _x;
-                document.querySelector("div.dialog-content form.send-text-form span.cost_txt").innerHTML = (_x*one_cost)+" \u017cetonów";
-                this.value = str;
-            }
-
-            function handler(e,item){
-                var button = document.querySelector('div.dialog-buttons button:first-child');
-                button.addClass('buttonSending');
-                button.setAttribute( 'disabled' , true);
-                button.innerHTML = 'wysyłanie....';
-                var body = document.querySelector('div.dialog-content form.send-text-form textarea').value;
-                var number = item.number;
-                var sp = new SendProcessor({
-                    body:body,
-                    recipient:number
-                });
-                try{
-                    sp.sendSms({
-                        success: function(data){
-                            if( data.error && data.error.code ){
-                                var eLocaleMessage = chrome.i18n.getMessage("error_"+data.error.code);
-                                var eMsg = chrome.i18n.getMessage("error", [eLocaleMessage]);
-                                alert(eMsg);
-                                button.removeClass('buttonSending');
-                                button.removeAttribute( 'disabled' , true);
-                                button.innerHTML = 'Wyślij';
-                                return;
-                            }else if( data.gateError ){
-                                var localeMessage = chrome.i18n.getMessage("error_send_processor_"+data.gateError);
-                                var msg = chrome.i18n.getMessage("error", [localeMessage]);
-                                alert(msg);
-                                button.removeClass('buttonSending');
-                                button.removeAttribute( 'disabled' , true);
-                                button.innerHTML = 'Wyślij';
-                            } else {
-                                UI.closeDialog();
-                            }
-                        },
-                        error: function(data){
-                            alert("Wystąpił błąd wysyłania wiadomości");
-                            console.error(data);
-                        }
-                    });
-                } catch(e){
-                    if( e instanceof NotLoggedInException ){
-                        alert('Nie jesteś zalogowany a aplikacji :(');
-                    } else {
-                        alert( 'Wystąpił błąd. Nie mogę wysłąć wiadomości.' );
-                    }
-                    button.removeClass('buttonSending');
-                    button.removeAttribute( 'disabled' , true);
-                    button.innerHTML = 'Wyślij';
-                }
-            }
-
-            context.db.transaction(function(tx) {
-                tx.executeSql("SELECT c.name,p.number FROM contacts as c JOIN phones as p ON p.contact_id = c.id WHERE p.id = ? LIMIT 1", [phoneId], function(tx,res){
-                    var item = res.rows.item(0);
-                    UI.dialog( {
-                        width: 400,
-                        height: 400,
-                        content: document.getElementById("send-sms-dialog"),
-                        title: 'Wyślij wiadomość do ' + item.name + " (" + item.number + ")",
-                        buttons: [
-                            {label:'Wyślij wiadomość',action:function(e){return handler.apply(context, [e,item]);},type:'button'},
-                            {label:'Anuluj',action:function(e){e.preventDefault();UI.closeDialog();},type:'link'}
-                        ]
-                    } );
-                    var body = document.querySelector('div.dialog-content form.send-text-form textarea');
-                    body.addEventListener( 'keyup' , inputBodyHandler);
-                    body.focus();
-                }, null);
-            });
+    function send(e){
+        var phoneId = e.target.dataset['phone'];
+        if( phoneId && !isNaN(phoneId) ){
+            SenderBox.createPhoneBox(phoneId);
         }
     }
-    
-    icon.addEventListener( 'click', function(e){return sendSmsCallback.call(context,icon, phoneId)});
-
-    
+    icon.setAttribute("data-phone", phoneId);
+    icon.addEventListener( 'click', send, true);
 }
 Contacts.prototype.observeDeleteAction = function(element, editId){
     var context = this;

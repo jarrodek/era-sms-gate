@@ -1,5 +1,12 @@
 
 function Gate(){
+    
+    chrome.tabs.getCurrent(function(tab){
+        if( typeof tab != 'undefined' ){ //is not popup
+            document.querySelector("span.open-window").addClass("hidden");
+        }
+    });
+    
     this.init();
 }
 
@@ -185,14 +192,15 @@ Gate.prototype.loadContacts = function(){
             var val = this.options[this.selectedIndex].value;
             if( val == "0" || val == "-1"){
                 document.getElementById("tel_num_txt_cont").style.display = 'block';
-                if( oauth.hasToken() )
+                if( oauth !=null && oauth.hasToken() )
                     document.querySelector('div.thumb_contact_image').innerHTML = '';
             } else {
                 document.getElementById("tel_num_cont").style.display = 'block';
                 document.getElementById("tel_num_txt_cont").style.display = 'none';
                 document.getElementById("sendTo").value = val;
-                if( oauth.hasToken() )
+                if( oauth != null && oauth.hasToken() ){
                     context.loadContactThumb(val);
+                }
             }
         }).apply(this);
     }

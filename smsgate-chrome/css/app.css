@@ -283,22 +283,25 @@ input.name-edit{
     margin-left: -1px;
 }
 div#bg-overlay{
-    background-color: #000000;
+    -webkit-user-select: none;
     width: 100%;
     height: 100%;
     position: fixed;
     top:0px;
     left:0px;
-    opacity: 0.65;
     z-index: 100;
+    background: -webkit-radial-gradient(rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 0.5) 35%, rgba(0, 0, 0, 0.7));  
+    -webkit-box-align: center; 
+    -webkit-box-pack: center; 
+    display: -webkit-box;
 }
 div.dialog-container{
-    position: fixed;
+    
     z-index: 101;
     background-color: #E0ECFF;
-    top:0px;
-    padding: 6px;
-}
+    
+    
+-webkit-box-shadow: 0px 5px 80px #505050; }
 div.dialog-wrapper{
     background-color: #ffffff;
     width:100%;
@@ -306,23 +309,23 @@ div.dialog-wrapper{
     position: relative;
 }
 div.dialog-wrapper > div.dialog-title{
-    min-height: 30px;
-    background-color: #bcd6ff;
-    padding: 3px 5px;
+    
+    
+    padding: 3px 0px;
 }
 div.dialog-wrapper > div.dialog-title > h2{
     margin: 0px;
     border: none;
-}
+background: -webkit-linear-gradient(white, #F8F8F8); border-bottom: 1px solid rgba(188, 193, 208, .5); font-size: 105%; font-weight: bold; padding: 10px 15px 8px 15px;}
 div.dialog-wrapper > div.dialog-content{
     padding: 0px 7px;
 }
 div.dialog-buttons{
-    padding: 0px 7px;
-    position: absolute;
-    bottom: 7px;
-    right: 7px;
-}
+    
+    
+    
+    
+-webkit-box-align: center; -webkit-box-orient: horizontal; -webkit-box-pack: end;  display: -webkit-box; padding: 20px 10px;}
 div.dialog-buttons > *{
     margin-left: 10px;
 }
@@ -371,10 +374,11 @@ fieldset.popup .nomargin{margin: 0; padding: 0;}
 fieldset.popup #lastOperation{ border-top: 1px solid #BCD; margin-top: 10px;padding-top: 7px; display: none;}
 fieldset.popup #lastOperation > p.nomargin {font-weight: bold;}
 div.dialog-content form.send-text-form .body-info,
-fieldset.popup .body-info{ font-size: 11px; }
+fieldset.popup .body-info{ font-size: 11px; display: block;}
 fieldset.popup .invalid{ border: 1px #c00 solid; }
 fieldset.popup .contact-edit{
     font-size: 12px;
+    margin-right: 20px;
 }
 fieldset.popup div.form_row_submit{
     position: relative;
@@ -691,4 +695,37 @@ div.help-footer > div.credits{
 }
 span.remote-remove{
     font-size: 11px;
+}
+#sendButton + span.progress-loader{
+    display: none;
+}
+#sendButton:disabled + span.progress-loader{
+    display: inline-block;
+    font-size: 14px;
+}
+.hidden{
+    display: none !important;
+}
+span.open-window{
+    position: absolute;
+    right: 13px;
+    top: 3px;
+    font-size: 11px;
+    z-index: 10;
+}
+span.open-window > a{
+    text-decoration: underline;
+}
+html button:focus, 
+html input:focus,
+html textarea:focus,
+html input[type="submit"]:focus, 
+html select:focus {
+    outline-color: rgba(204, 0, 153, 0.95);
+    border: 1px solid rgb(204, 0, 153);
+}
+html textarea,
+html input{
+    -webkit-border-radius: 2px;
+    border: 1px solid #AAA;
 }

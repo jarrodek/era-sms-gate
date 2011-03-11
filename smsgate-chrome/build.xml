@@ -1,0 +1,33 @@
+
+<project name="era-sms-extension" default="dist" basedir=".">
+    <property name="extension.name" value="smsgate-chrome" />
+    <property name="extension.zip.file" value="${extension.name}.zip" />
+    <property name="extension.dir" value="build" />
+        
+    <target name="dist" depends="clean,build,cleanSource"></target>
+	
+    <target name="clean">
+        <delete file="${extension.zip.file}"/>
+    </target>
+    <target name="cleanSource">
+        <delete dir="${extension.dir}" />
+    </target>
+        <!--    Creates temp dir, copy extension files, create ZIP file and delete tmp dir    -->
+    <target name="build">
+        <mkdir dir="${extension.dir}"/>
+        <copy todir="${extension.dir}">
+            <fileset dir="./">
+                <exclude name="**/build.xml"/>
+                <exclude name="**/.svn"/>
+                <exclude name="**/smsgate-chrome.zip"/>
+                <exclude name="**/build/"/>
+                <exclude name="**/nbproject/"/>
+                
+            </fileset>
+        </copy>
+        <zip destfile="${extension.zip.file}"
+	       basedir="${extension.dir}"/>
+    </target>
+        
+        
+</project>
