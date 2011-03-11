@@ -12,6 +12,9 @@
         <script type="text/javascript" src="js/analytics.js"></script>
     </head>
     <body onload="new Gate();">
+        <span class="open-window">
+            <a href="popup.html" target="_blank">Otwórz w nowym oknie</a>
+        </span>
         <form action="#" name="send-form" id="send-form" autocomplete="on">
             <fieldset class="popup"><legend>Wyślij sms-a z bramki</legend>
                 <div class="form_row" id="tel_num_cont">
@@ -36,6 +39,9 @@
                     <div class="thumb_contact_image"></div>
                     <div class="form_value">
                         <input onclick="trackButton(this.id);" type="submit" class="button" value="Wyślij" id="sendButton"/>
+                        <span class="progress-loader">
+                            wysyłanie... <progress></progress>
+                        </span>
                     </div>
                     <div class="clearer">&nbsp;</div>
                 </div>

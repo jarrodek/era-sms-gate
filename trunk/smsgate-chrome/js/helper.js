@@ -640,7 +640,7 @@ Object.prototype.bind = function(context){
 }
 var UI = {};
 UI.dialog = function(options){
-    UI.createOverlay();
+    var overlay = UI.createOverlay();
     var opts = {};
     if( options.width ){
         opts.width = options.width;
@@ -648,7 +648,22 @@ UI.dialog = function(options){
     if( options.height ){
         opts.height = options.height;
     }
-    var wrapper = UI.createDialog(opts);
+    
+    var ovr = document.createElement('div');
+    var wrapper = document.createElement('div');
+    ovr.className = 'dialog-container';
+    if( opts.width ){
+        ovr.style.width = opts.width+'px';
+    }
+    if( opts.height ){
+        ovr.style.height = opts.height+'px';
+    }
+    wrapper.className = 'dialog-wrapper';
+    ovr.appendChild( wrapper );
+    
+    overlay.appendChild(ovr);
+    
+    //var wrapper = UI.createDialog(opts);
 
     var title = document.createElement('div');
     title.className = 'dialog-title';
@@ -693,11 +708,11 @@ UI.dialog = function(options){
         }
     }
     wrapper.appendChild( buttonsBar );
-    UI.positioneDialog();
-    window.addEventListener('resize', UI.resizeHandler);
+    //UI.positioneDialog();
+    //window.addEventListener('resize', UI.resizeHandler);
 }
 UI.closeDialog = function(){
-    window.removeEventListener('resize', UI.resizeHandler);
+    //window.removeEventListener('resize', UI.resizeHandler);
     var dialog = document.querySelector('div.dialog-container');
     dialog.parentNode.removeChild( dialog );
     var overlay = document.getElementById('bg-overlay');
@@ -722,6 +737,7 @@ UI.createOverlay = function(){
     document.body.appendChild( o );
     return o;
 }
+
 UI.createDialog = function(opt){
     var o = document.createElement('div');
     var w = document.createElement('div');
@@ -770,49 +786,62 @@ var SenderBox = {
         var content = SenderBox.getFormContent(numbers);
         SenderBox.createDialog(content,dialogTitle);
     },
-    createBox: function(phoneId){
+    /**
+     * Create send sms dialog for contact ID
+     * @param contactId database contact ID
+     */
+    createBox: function(contactId){
         
         if( SenderBox.canSend() ) {
             var query = "SELECT c.name,p.number FROM contacts as c " +
                 "JOIN phones as p ON p.contact_id = c.id " +
                 "WHERE c.id = ?"
-            DatabaseHelper.getConnection().transaction(function(tx) {
-                tx.executeSql(query, [phoneId], function(tx,res){
-                    var phonesLength = res.rows.length;
-                    var dialogTitle = "Wyślij wiadomość do ";
-                    var numbers = [];
-                    if( phonesLength > 1 ){
-                        for (var i = 0; i < res.rows.length; i++) {
-                            var _it = res.rows.item(i);
-                            numbers[numbers.length] = _it.number;
-                            if( i == 0 )
-                                dialogTitle += _it.name;
-                        }
-                    } else if( phonesLength == 1 ){
-                        var oneItem = res.rows.item(0);
-                        dialogTitle += oneItem.name + " (" + oneItem.number + ")";
-                        numbers[numbers.length] = oneItem.number;
-                    } else {
-                        dialogTitle += 'nieznany';
-                    }
-                    var content = SenderBox.getFormContent(numbers);
-                    SenderBox.createDialog(content,dialogTitle);
-                });
-            });
+            SenderBox._handleCreateBoxQuery(query, contactId);
         }
+    },
+    createPhoneBox: function(phoneId){
+        var query = "SELECT c.name,p.number FROM contacts as c " +
+            "JOIN phones as p ON p.contact_id = c.id " +
+            "WHERE p.id = ?"
+        SenderBox._handleCreateBoxQuery(query, phoneId);
+    },
+    _handleCreateBoxQuery: function(query, parm){
+        DatabaseHelper.getConnection().transaction(function(tx) {
+            tx.executeSql(query, [parm], function(tx,res){
+                var phonesLength = res.rows.length;
+                var dialogTitle = "Wyślij wiadomość do ";
+                var numbers = [];
+                if( phonesLength > 1 ){
+                    for (var i = 0; i < res.rows.length; i++) {
+                        var _it = res.rows.item(i);
+                        numbers[numbers.length] = _it.number;
+                        if( i == 0 )
+                            dialogTitle += _it.name;
+                    }
+                } else if( phonesLength == 1 ){
+                    var oneItem = res.rows.item(0);
+                    dialogTitle += oneItem.name + " (" + oneItem.number + ")";
+                    numbers[numbers.length] = oneItem.number;
+                } else {
+                    dialogTitle += 'nieznany';
+                }
+                var content = SenderBox.getFormContent(numbers);
+                SenderBox.createDialog(content,dialogTitle);
+            });
+        });
     },
     createDialog: function(content,dialogTitle){
         UI.dialog( {
             width: 400,
-            height: 400,
+            //height: 400,
             content: content,
             title: dialogTitle,
             buttons: [
                 {label:'Wyślij wiadomość',action:function(e){return SenderBox.messageHandler();},type:'button'},
-                {label:'Anuluj',action:function(){UI.closeDialog();},type:'link'}
+                {label:'Anuluj',action:function(e){e.preventDefault();UI.closeDialog();},type:'link'}
             ]
         } );
-        var body = document.querySelector('div.dialog-content form.send-text-form textarea#sms-body');
+        var body = document.querySelector('div.dialog-content form.send-text-form textarea');
         body.addEventListener( 'keyup' , SenderBox.inputBodyHandler);
         body.focus();
     },
@@ -865,12 +894,17 @@ var SenderBox = {
         return form;
     },
     messageHandler: function(){
+        var body = document.querySelector('div.dialog-content form.send-text-form textarea').value;
+        if( body.trim() == "" ){
+            alert("Wpisz treść wiadomości.");
+            return;
+        }
+        
         var button = document.querySelector('div.dialog-buttons button:first-child');
         button.addClass('buttonSending');
         button.setAttribute( 'disabled' , true);
         button.innerHTML = 'wysyłanie....';
 
-        var body = document.querySelector('div.dialog-content form.send-text-form textarea').value;
         var number = document.querySelector('div.dialog-content form.send-text-form input.sendToNumber').value;
         var sp = new SendProcessor({
             body:body,
@@ -916,7 +950,7 @@ var SenderBox = {
         }
     },
     inputBodyHandler: function(e){
-        var noExecKeys = [8,13,16,17,18,20,33,34,35,36,37,38,39,40,255];
+        var noExecKeys = [13,16,17,18,20,33,34,35,36,37,38,39,40,255];//8,
         if( noExecKeys.indexOf(e.keyCode) != -1 ){
             return true;
         }
