@@ -73,7 +73,7 @@ public class SendServlet extends HttpServlet {
 		
 		String encodedBody = URLEncoder.encode( body , "UTF-8");
 		String pathUrl = (gateInnerType != null && gateInnerType.equals( "sponsored" )) ? "sponsored" : "omnix"; //default omnix
-		String sendUrl = "http://www.era.pl/msg/api/do/tinker/%s?" +"message=%s&number=%s&password=%s&login=%s&failure=%s&success=%s&mms=false";
+		String sendUrl = "http://www.t-mobile.pl/msg/api/do/tinker/%s?" +"message=%s&number=%s&password=%s&login=%s&failure=%s&success=%s&mms=false";
 		String formattedUrl = String.format(sendUrl, pathUrl, encodedBody, recipient, password, login, return_host, return_host);
 		
 //		serverResponse = "{\"cost\":\"18\",\"tokens_left\":\"1000\",\"error\":\"0\",\"counter\":\"1\"}";
@@ -174,12 +174,12 @@ public class SendServlet extends HttpServlet {
 		return_host += req.getServerName();
 		return_host += "%2Fera_PL%2Fhandler";
 		
-//		String sendUrl = "http://www.era.pl/msg/api/do/tinker/omnix?" +
+//		String sendUrl = "http://www.t-mobile.pl/msg/api/do/tinker/omnix?" +
 //			"message=n&number=XXX&password=%s&login=%s&failure=%s&success=%s&mms=false";
 //		String formattedUrl = String.format(sendUrl, password, login, return_host, return_host);
 		
 		String pathUrl = (gateInnerType != null && gateInnerType.equals( "sponsored" )) ? "sponsored" : "omnix"; //default omnix
-		String sendUrl = "http://www.era.pl/msg/api/do/tinker/%s?message=n&number=XXX&password=%s&login=%s&failure=%s&success=%s&mms=false";
+		String sendUrl = "http://www.t-mobile.pl/msg/api/do/tinker/%s?message=n&number=XXX&password=%s&login=%s&failure=%s&success=%s&mms=false";
 		String formattedUrl = String.format(sendUrl, pathUrl, password, login, return_host, return_host);
 		
 		JSONObject srvObj = this.getGateResponse(formattedUrl);
